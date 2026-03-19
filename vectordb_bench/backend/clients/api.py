@@ -45,6 +45,7 @@ class IndexType(StrEnum):
     SCANN_MILVUS = "SCANN_MILVUS"
     Hologres_HGraph = "HGraph"
     Hologres_Graph = "Graph"
+    OMEGA = "OMEGA"
     NONE = "NONE"
 
 

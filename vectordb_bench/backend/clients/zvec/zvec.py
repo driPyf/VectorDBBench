@@ -14,12 +14,14 @@ from zvec import (
     QuantizeType,
     VectorQuery,
     VectorSchema,
+    OmegaIndexParam,
+    OmegaQueryParam,
 )
 
 from vectordb_bench.backend.filter import Filter, FilterOp
 
 from ..api import MetricType, VectorDB
-from .config import ZvecConfig, ZvecHNSWIndexConfig, ZvecIndexConfig
+from .config import ZvecConfig, ZvecHNSWIndexConfig, ZvecIndexConfig, ZvecOMEGAIndexConfig
 
 log = logging.getLogger(__name__)
 
@@ -182,6 +184,18 @@ class Zvec(VectorDB):
 
     @classmethod
     def _parse_index_param(cls, index_config: ZvecIndexConfig) -> zvec.HnswIndexParam:
+        if isinstance(index_config, ZvecOMEGAIndexConfig):
+            return OmegaIndexParam(
+                metric_type=Zvec._parse_metric(index_config.metric_type),
+                m=index_config.M,
+                ef_construction=index_config.ef_construction,
+                quantize_type=Zvec._parse_quantize_type(index_config.quantize_type),
+                min_vector_threshold=index_config.min_vector_threshold,
+                num_training_queries=index_config.num_training_queries,
+                ef_training=index_config.ef_training,
+                window_size=index_config.window_size,
+                ef_groundtruth=index_config.ef_groundtruth,
+            )
         if isinstance(index_config, ZvecHNSWIndexConfig):
             return zvec.HnswIndexParam(
                 metric_type=Zvec._parse_metric(index_config.metric_type),
@@ -194,6 +208,12 @@ class Zvec(VectorDB):
 
     @classmethod
     def _parse_query_param(cls, index_config: ZvecIndexConfig) -> zvec.HnswQueryParam:
+        if isinstance(index_config, ZvecOMEGAIndexConfig):
+            return OmegaQueryParam(
+                ef=index_config.ef_search,
+                target_recall=index_config.target_recall,
+                is_using_refiner=index_config.is_using_refiner,
+            )
         if isinstance(index_config, ZvecHNSWIndexConfig):
             return zvec.HnswQueryParam(
                 ef=index_config.ef_search,

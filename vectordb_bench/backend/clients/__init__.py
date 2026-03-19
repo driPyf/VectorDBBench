@@ -567,9 +567,9 @@ class DB(Enum):
             return HologresIndexConfig
 
         if self == DB.Zvec:
-            from .zvec.config import ZvecHNSWIndexConfig
+            from .zvec.config import _zvec_case_config
 
-            return ZvecHNSWIndexConfig
+            return _zvec_case_config.get(index_type)
 
         if self == DB.TencentElasticsearch:
             from .tencent_elasticsearch.config import TencentElasticsearchIndexConfig
