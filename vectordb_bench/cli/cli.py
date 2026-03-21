@@ -130,6 +130,7 @@ def click_arg_split(ctx: click.Context, param: click.core.Option, value: any):  
 def parse_task_stages(
     drop_old: bool,
     load: bool,
+    optimize: bool,
     search_serial: bool,
     search_concurrent: bool,
 ) -> list[TaskStage]:
@@ -142,6 +143,8 @@ def parse_task_stages(
         stages.append(TaskStage.DROP_OLD)
     if load:
         stages.append(TaskStage.LOAD)
+    if optimize:
+        stages.append(TaskStage.OPTIMIZE)
     if search_serial:
         stages.append(TaskStage.SEARCH_SERIAL)
     if search_concurrent:
@@ -640,6 +643,7 @@ def run(
         stages=parse_task_stages(
             (False if not parameters["load"] else parameters["drop_old"]),  # only drop old data if loading new data
             parameters["load"],
+            parameters["load"] or parameters.get("retrain_only", False),
             parameters["search_serial"],
             parameters["search_concurrent"],
         ),

@@ -79,6 +79,11 @@ class ZvecOMEGATypedDict(ZvecHNSWTypedDict):
         click.option("--target-recall", type=float, default=0.95,
                      help="Target recall for OMEGA early stopping (0.0 to 1.0)"),
     ]
+    retrain_only: Annotated[
+        bool,
+        click.option("--retrain-only/--skip-retrain-only", default=False,
+                     help="Reuse existing index and only retrain OMEGA model during optimize"),
+    ]
 
 
 # default to hnsw
@@ -129,6 +134,7 @@ def ZvecOmega(**parameters: Unpack[ZvecOMEGATypedDict]):
             window_size=parameters["window_size"],
             ef_groundtruth=parameters["ef_groundtruth"],
             target_recall=parameters["target_recall"],
+            retrain_only=parameters["retrain_only"],
         ),
         **parameters,
     )

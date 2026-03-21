@@ -59,6 +59,7 @@ class ZvecOMEGAIndexConfig(ZvecIndexConfig):
 
     # OMEGA query parameter
     target_recall: float = 0.95
+    retrain_only: bool = False
 
 
 # Dictionary mapping IndexType to config class

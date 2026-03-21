@@ -216,6 +216,7 @@ class TaskStage(StrEnum):
 
     DROP_OLD = "drop_old"
     LOAD = "load"
+    OPTIMIZE = "optimize"
     SEARCH_SERIAL = "search_serial"
     SEARCH_CONCURRENT = "search_concurrent"
 
@@ -227,6 +228,7 @@ class TaskStage(StrEnum):
 ALL_TASK_STAGES = [
     TaskStage.DROP_OLD,
     TaskStage.LOAD,
+    TaskStage.OPTIMIZE,
     TaskStage.SEARCH_SERIAL,
     TaskStage.SEARCH_CONCURRENT,
 ]

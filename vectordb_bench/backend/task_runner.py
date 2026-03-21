@@ -188,20 +188,27 @@ class CaseRunner(BaseModel):
         log.info("Start performance case")
         try:
             m = Metric()
-            if drop_old:
-                if TaskStage.LOAD in self.config.stages:
-                    _, load_dur = self._load_train_data()
-                    build_dur = self._optimize()
-                    m.insert_duration = round(load_dur, 4)
-                    m.optimize_duration = round(build_dur, 4)
-                    m.load_duration = round(load_dur + build_dur, 4)
-                    log.info(
-                        f"Finish loading the entire dataset into VectorDB,"
-                        f" insert_duration={load_dur}, optimize_duration={build_dur}"
-                        f" load_duration(insert + optimize) = {m.load_duration}"
-                    )
-                else:
-                    log.info("Data loading skipped")
+            load_dur = 0.0
+            build_dur = 0.0
+            if TaskStage.LOAD in self.config.stages:
+                _, load_dur = self._load_train_data()
+                m.insert_duration = round(load_dur, 4)
+            if TaskStage.OPTIMIZE in self.config.stages:
+                build_dur = self._optimize()
+                m.optimize_duration = round(build_dur, 4)
+                m.load_duration = round(load_dur + build_dur, 4)
+                log.info(
+                    f"Finish loading the entire dataset into VectorDB,"
+                    f" insert_duration={load_dur}, optimize_duration={build_dur}"
+                    f" load_duration(insert + optimize) = {m.load_duration}"
+                )
+            elif TaskStage.LOAD in self.config.stages:
+                log.info(
+                    f"Finish loading the entire dataset into VectorDB,"
+                    f" insert_duration={load_dur}, optimize skipped"
+                )
+            elif drop_old:
+                log.info("Data loading skipped")
             if TaskStage.SEARCH_SERIAL in self.config.stages or TaskStage.SEARCH_CONCURRENT in self.config.stages:
                 self._init_search_runner()
                 if TaskStage.SEARCH_CONCURRENT in self.config.stages:

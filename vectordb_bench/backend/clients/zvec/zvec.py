@@ -155,7 +155,12 @@ class Zvec(VectorDB):
         return [int(result.id) for result in results]
 
     def optimize(self, data_size: int | None = None):
-        self.collection.optimize(option=OptimizeOption())
+        retrain_only = False
+        if isinstance(self.case_config, ZvecOMEGAIndexConfig):
+            retrain_only = self.case_config.retrain_only
+        self.collection.optimize(
+            option=OptimizeOption(retrain_only=retrain_only)
+        )
 
     def prepare_filter(self, filters: Filter):
         self.option = CollectionOption(read_only=True, enable_mmap=True)
