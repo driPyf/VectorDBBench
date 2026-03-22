@@ -1,4 +1,5 @@
 import logging
+import os
 from contextlib import contextmanager
 
 import zvec
@@ -25,7 +26,21 @@ from .config import ZvecConfig, ZvecHNSWIndexConfig, ZvecIndexConfig, ZvecOMEGAI
 
 log = logging.getLogger(__name__)
 
-zvec.init(log_level=LogLevel.WARN)
+
+def _resolve_zvec_log_level() -> LogLevel:
+    level_name = os.environ.get("ZVEC_LOG_LEVEL", "WARN").strip().upper()
+    level_map = {
+        "DEBUG": LogLevel.DEBUG,
+        "INFO": LogLevel.INFO,
+        "WARN": LogLevel.WARN,
+        "WARNING": LogLevel.WARN,
+        "ERROR": LogLevel.ERROR,
+        "FATAL": LogLevel.FATAL,
+    }
+    return level_map.get(level_name, LogLevel.WARN)
+
+
+zvec.init(log_level=_resolve_zvec_log_level())
 
 
 class Zvec(VectorDB):
