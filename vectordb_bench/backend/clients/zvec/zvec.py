@@ -215,6 +215,7 @@ class Zvec(VectorDB):
                 ef_training=index_config.ef_training,
                 window_size=index_config.window_size,
                 ef_groundtruth=index_config.ef_groundtruth,
+                k_train=index_config.k_train,
             )
         if isinstance(index_config, ZvecHNSWIndexConfig):
             return zvec.HnswIndexParam(

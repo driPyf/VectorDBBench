@@ -56,6 +56,7 @@ class ZvecOMEGAIndexConfig(ZvecIndexConfig):
     ef_training: int = 1000
     window_size: int = 100
     ef_groundtruth: int = 0  # 0 = brute force, >0 = HNSW with this ef (faster)
+    k_train: int = 1
 
     # OMEGA query parameter
     target_recall: float = 0.95

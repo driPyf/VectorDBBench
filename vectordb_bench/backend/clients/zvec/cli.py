@@ -74,6 +74,11 @@ class ZvecOMEGATypedDict(ZvecHNSWTypedDict):
         click.option("--ef-groundtruth", type=int, default=0,
                      help="ef for ground truth computation (0=brute force, >0=HNSW for faster training)"),
     ]
+    k_train: Annotated[
+        int,
+        click.option("--k-train", type=int, default=1,
+                     help="Number of top GT results required for a positive OMEGA training label"),
+    ]
     target_recall: Annotated[
         float,
         click.option("--target-recall", type=float, default=0.95,
@@ -133,6 +138,7 @@ def ZvecOmega(**parameters: Unpack[ZvecOMEGATypedDict]):
             ef_training=parameters["ef_training"],
             window_size=parameters["window_size"],
             ef_groundtruth=parameters["ef_groundtruth"],
+            k_train=parameters["k_train"],
             target_recall=parameters["target_recall"],
             retrain_only=parameters["retrain_only"],
         ),
